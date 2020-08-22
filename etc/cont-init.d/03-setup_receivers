@@ -1,0 +1,122 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+CONFIG_FILE="$HOME/.local/share/VirtualRadar/Configuration.xml"
+
+# define function to write a new receiver element
+function write_receiver_element {
+
+  # The name of the data source
+  rcvr_name="$1"
+
+  # The type of data source
+  #   "Port30003" = SBS/Basestation
+  #   "Beast" = Beast
+  rcvr_datasource="$2"
+
+  # The IP/hostname of the data source
+  rcvr_address="$3"
+
+  # The port of the datasource
+  rcvr_port="$4"
+
+  xmlstarlet ed --inplace \
+    -s '//Configuration//Receivers' -t elem -n 'ReceiverTMP' -v "" \
+      -s '//ReceiverTMP' -t elem -n 'Enabled' -v 'true' \
+      -s '//ReceiverTMP' -t elem -n 'UniqueId' -v '1' \
+      -s '//ReceiverTMP' -t elem -n 'Name' -v "$rcvr_name" \
+      -s '//ReceiverTMP' -t elem -n 'DataSource' -v "$rcvr_datasource" \
+      -s '//ReceiverTMP' -t elem -n 'ConnectionType' -v "TCP" \
+      -s '//ReceiverTMP' -t elem -n 'AutoReconnectAtStartup' -v "true" \
+      -s '//ReceiverTMP' -t elem -n 'IsSatcomFeed' -v "false" \
+      -s '//ReceiverTMP' -t elem -n 'IsPassive' -v "false" \
+      -s '//ReceiverTMP' -t elem -n 'Access' -v "" \
+        -s '//ReceiverTMP/Access' -t elem -n 'DefaultAccess' -v 'Unrestricted' \
+        -s '//ReceiverTMP/Access' -t elem -n 'Addresses' -v '' \
+      -s '//ReceiverTMP' -t elem -n 'Address' -v "$rcvr_address" \
+      -s '//ReceiverTMP' -t elem -n 'Port' -v "$rcvr_port" \
+      -s '//ReceiverTMP' -t elem -n 'UseKeepAlive' -v "true" \
+      -s '//ReceiverTMP' -t elem -n 'IdleTimeoutMilliseconds' -v "60000" \
+      -s '//ReceiverTMP' -t elem -n 'BaudRate' -v "115200" \
+      -s '//ReceiverTMP' -t elem -n 'DataBits' -v "8" \
+      -s '//ReceiverTMP' -t elem -n 'StopBits' -v "One" \
+      -s '//ReceiverTMP' -t elem -n 'Parity' -v "None" \
+      -s '//ReceiverTMP' -t elem -n 'Handshake' -v "None" \
+      -s '//ReceiverTMP' -t elem -n 'StartupText' -v "#43-02\r" \
+      -s '//ReceiverTMP' -t elem -n 'ShutdownText' -v "#43-00\r" \
+      -s '//ReceiverTMP' -t elem -n 'ReceiverLocationId' -v "0" \
+      -s '//ReceiverTMP' -t elem -n 'ReceiverUsage' -v "Normal" \
+    -r '//ReceiverTMP' -v 'Receiver' \
+    "$CONFIG_FILE"
+}
+
+
+# Remove default receiver (if it exists)
+xmlstarlet ed --inplace -d '//Configuration//Receivers//Receiver//Address[text()="127.0.0.1"]//..' "$CONFIG_FILE"
+
+
+# If BASESTATIONHOST host variable set
+if [[ -n "$BASESTATIONHOST" ]]; then
+  # If BASESTATIONHOST receiver exists
+  if xmlstarlet sel -t -c '//Configuration//Receivers//Receiver/Name[text()="BASESTATIONHOST"]' "$CONFIG_FILE" > /dev/null 2>&1; then
+    # Update address/port/datasource in place
+    xmlstarlet ed --inplace \
+      -u '//Configuration//Receivers//Receiver/Name[text()="BASESTATIONHOST"]/../Address' -v "$BASESTATIONHOST" \
+      -u '//Configuration//Receivers//Receiver/Name[text()="BASESTATIONHOST"]/../Port' -v "$BASESTATIONPORT" \
+      -u '//Configuration//Receivers//Receiver/Name[text()="BASESTATIONHOST"]/../DataSource' -v "Port30003" \
+      "$CONFIG_FILE"
+  else
+    # Create it
+    write_receiver_element "BASESTATIONHOST" "Port30003" "$BASESTATIONHOST" "$BASESTATIONPORT"
+  fi
+else
+  # If BASESTATIONHOST host variable not set, delete it
+  xmlstarlet ed --inplace -d '//Configuration//Receivers//Receiver/Name[text()="BASESTATIONHOST"]//..' "$CONFIG_FILE"
+fi
+
+
+# If BEASTHOST host variable set
+if [[ -n "$BEASTHOST" ]]; then
+  # If BEASTHOST receiver exists
+  if xmlstarlet sel -t -c '//Configuration//Receivers//Receiver/Name[text()="BEASTHOST"]' "$CONFIG_FILE" > /dev/null 2>&1; then
+    # Update address/port/datasource in place
+    xmlstarlet ed --inplace \
+      -u '//Configuration//Receivers//Receiver/Name[text()="BEASTHOST"]/../Address' -v "$BEASTHOST" \
+      -u '//Configuration//Receivers//Receiver/Name[text()="BEASTHOST"]/../Port' -v "$BEASTPORT" \
+      -u '//Configuration//Receivers//Receiver/Name[text()="BEASTHOST"]/../DataSource' -v "Beast" \
+      "$CONFIG_FILE"
+  else
+    # Create it
+    write_receiver_element "BEASTHOST" "Beast" "$BEASTHOST" "$BEASTPORT"
+  fi
+else
+  # If BEASTHOST host variable not set, delete it
+  xmlstarlet ed --inplace -d '//Configuration//Receivers//Receiver/Name[text()="BEASTHOST"]//..' "$CONFIG_FILE"
+fi
+
+
+# If MLATHOST host variable set
+if [[ -n "$MLATHOST" ]]; then
+  # If MLATHOST receiver exists
+  if xmlstarlet sel -t -c '//Configuration//Receivers//Receiver/Name[text()="MLATHOST"]' "$CONFIG_FILE" > /dev/null 2>&1; then
+    # Update address/port/datasource in place
+    xmlstarlet ed --inplace \
+      -u '//Configuration//Receivers//Receiver/Name[text()="MLATHOST"]/../Address' -v "$MLATHOST" \
+      -u '//Configuration//Receivers//Receiver/Name[text()="MLATHOST"]/../Port' -v "$MLATPORT" \
+      -u '//Configuration//Receivers//Receiver/Name[text()="MLATHOST"]/../DataSource' -v "Beast" \
+      "$CONFIG_FILE"
+  else
+    # Create it
+    write_receiver_element "MLATHOST" "Beast" "$MLATHOST" "$MLATPORT"
+  fi
+else
+  # If MLATHOST host variable not set, delete it
+  xmlstarlet ed --inplace -d '//Configuration//Receivers//Receiver/Name[text()="MLATHOST"]//..' "$CONFIG_FILE"
+fi
+
+
+# Renumber each <UniqueId>
+NUM_RECEIVERS=$(xmlstarlet sel -t -c 'count(//Configuration//Receivers//Receiver//UniqueId)' "$CONFIG_FILE")
+for ((i = 1 ; i <= $NUM_RECEIVERS ; i++)); do
+  xmlstarlet ed --inplace -u "//Configuration//Receivers//Receiver[$i]/UniqueId" -v "$i" "$CONFIG_FILE"
+done

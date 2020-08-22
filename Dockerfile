@@ -88,6 +88,8 @@ FROM debian:buster-slim AS final
 
 ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
     BASESTATIONPORT=30003 \
+    BEASTPORT=30005 \
+    MLATPORT=30105 \
     HOME=/config
 
 COPY --from=builder /opt /opt
@@ -115,8 +117,8 @@ RUN set -x && \
     apt-get install -y --no-install-recommends \
         curl \
         mono-complete \
-        socat \
         sqlite3 \
+        xmlstarlet \
         && \
     echo "Create vrs user..." && \
     useradd --home-dir /home/vrs --skel /etc/skel --create-home --user-group --shell /usr/sbin/nologin vrs && \

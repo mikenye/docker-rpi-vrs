@@ -20,13 +20,3 @@ if [ -z "${TZ}" ]; then
 else
   ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 fi
-
-# Install operator photos
-echo "Installing operator flags..."
-cp -R /opt/VRS_Extras/bonesaviation/operator-logo-starter-pack/* /config/operatorflags
-cp -R /opt/VRS_Extras/dedevillela/VRS-Operator-Flags/OperatorFlags/* /config/operatorflags
-chown -R vrs:vrs /config/operatorflags
-echo "Installing silhouettes..."
-cp -R /opt/VRS_Extras/dedevillela/VRS-Silhouettes/Silhouettes/* /config/silhouettes/
-chown -R vrs:vrs /config/silhouettes
-

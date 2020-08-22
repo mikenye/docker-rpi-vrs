@@ -69,7 +69,11 @@ of this parameter has the format `<VARIABLE_NAME>=<VALUE>`.
 |`USERNAME`|Username for the admin area. Required.| |
 |`PASSWORD`|Password for the admin area. Required.| |
 |`BASESTATIONHOST`|IP/hostname of `dump1090`/`readsb` or another program/device providing Basestation protocol data. Optional.| |
-|`BASESTATIONPORT`|TCP port for program/device providing Basestation protocol data.| `30003` |
+|`BASESTATIONPORT`|TCP port for program/device providing Basestation protocol data. Optional. | `30003` |
+|`BEASTHOST`|IP/hostname of `dump1090`/`readsb` or another program/device providing BEAST protocol data. Optional.| |
+|`BEASTPORT`|TCP port for program/device providing BEAST protocol data. Optional. | `30005` |
+|`MLATHOST`|IP/hostname of `dump1090`/`readsb/mlat-client` or another program/device providing MLAT protocol data. Optional.| |
+|`MLATPORT`|TCP port for program/device providing MLAT protocol data. Optional. | `30105` |
 
 ### Data Volumes
 
