@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
-# shellceck shell=bash
+# shellcheck shell=bash
 
 # Install operator photos
 echo "Installing operator flags..."
