@@ -14,6 +14,8 @@ ADD http://www.virtualradarserver.co.uk/Files/VirtualRadar.exe.config.tar.gz /tm
 #   - Instructions from: https://forum.virtualradarserver.co.uk/viewtopic.php?t=929
 ADD http://www.woodair.net/SBS/Download/LOGO.zip /tmp/files/operator-logo-starter-pack.zip
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 # Build container
 RUN set -x && \
     # Pre-requisites to install specific mono version
@@ -50,9 +52,9 @@ RUN set -x && \
     tar -C /opt/VirtualRadar -xf /tmp/files/VirtualRadar.exe.config.tar.gz && \
     mkdir -p /config/operatorflags && \
     mkdir -p /config/silhouettes && \
-    export HOME=/config && \
+    HOME=/config && \
     echo "Starting VirtualRadarServer for 10 seconds to allow /config to be generated..." && \
-    timeout 10 mono /opt/VirtualRadar/VirtualRadar.exe -nogui -createAdmin:`uuidgen -r` -password:`uuidgen -r` > /dev/null 2>&1 || true && \
+    timeout 10 mono /opt/VirtualRadar/VirtualRadar.exe -nogui -createAdmin:"$(uuidgen -r)" -password:"$(uuidgen -r)" > /dev/null 2>&1 || true && \
     rm /config/.local/share/VirtualRadar/Users.sqb && \
     echo "Settings Silhouettes and Flags paths..." && \
     cp /config/.local/share/VirtualRadar/Configuration.xml /config/.local/share/VirtualRadar/Configuration.xml.original && \
@@ -95,6 +97,8 @@ ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=2 \
 COPY --from=builder /opt /opt
 
 COPY --from=builder /config /config
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN set -x && \
     # Pre-requisites to install specific mono version
