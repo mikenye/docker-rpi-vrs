@@ -1,4 +1,6 @@
-#!/usr/bin/with-contenv sh
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
 # Prevent vrs complaining if an admin user is already set
 if [ -f "/config/.local/share/VirtualRadar/Users.sqb" ]; then
     sqlite3 /config/.local/share/VirtualRadar/Users.sqb 'DELETE FROM [User] WHERE [LoginName] = "'"${USERNAME}"'"'
