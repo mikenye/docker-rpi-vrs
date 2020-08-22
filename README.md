@@ -1,6 +1,6 @@
 # mikenye/virtualradarserver
 
-Docker container for Virtual Radar Server (http://www.virtualradarserver.co.uk).
+Docker container for Virtual Radar Server (<http://www.virtualradarserver.co.uk>).
 
 Builds and runs on x86_64, arm32v6, arm32v7 and arm64v8 (and possibly other architectures).
 
@@ -24,7 +24,7 @@ This container is designed to work in conjunction with a Mode-S / BEAST provider
 
 Launch the VRS docker container with the following commands:
 
-```
+```shell
 docker volume create vrsconfig
 docker run -d \
     --name=vrs \
@@ -33,7 +33,7 @@ docker run -d \
     -e PASSWORD=very_secure_password_123 \
     -e BASESTATIONHOST=readsb \
     -v vrsconfig:/config \
-    mikenye/virtualradarserver 
+    mikenye/virtualradarserver
 ```
 
 Browse to `http://dockerhost:8080/VirtualRadar/` to access the VRS GUI.
@@ -42,7 +42,7 @@ Browse to `http://dockerhost:8080/VirtualRadar/WebAdmin/Index.html` to access th
 
 ## Usage
 
-```
+```shell
 docker run [-d] \
     --name=vrs \
     [-e <VARIABLE_NAME>=<VALUE>]... \
@@ -50,6 +50,7 @@ docker run [-d] \
     [-p <HOST_PORT>:<CONTAINER_PORT>]... \
     mikenye/virtualradarserver
 ```
+
 | Parameter | Description |
 |-----------|-------------|
 | -d        | Run the container in background.  If not set, the container runs in foreground. |
