@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv sh
 # Prevent vrs complaining if an admin user is already set
 if [ -f "/config/.local/share/VirtualRadar/Users.sqb" ]; then
-    sqlite3 /config/.local/share/VirtualRadar/Users.sqb 'DELETE FROM [User] WHERE [LoginName] = "'${USERNAME}'"'
+    sqlite3 /config/.local/share/VirtualRadar/Users.sqb 'DELETE FROM [User] WHERE [LoginName] = "'"${USERNAME}"'"'
 fi
 # Launch vrs
 s6-setuidgid vrs \
