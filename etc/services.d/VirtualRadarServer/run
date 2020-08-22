@@ -5,5 +5,5 @@ if [ -f "/config/.local/share/VirtualRadar/Users.sqb" ]; then
 fi
 # Launch vrs
 s6-setuidgid vrs \
-mono /opt/VirtualRadar/VirtualRadar.exe -nogui -createAdmin:${USERNAME} -password:${PASSWORD}
+    mono /opt/VirtualRadar/VirtualRadar.exe -nogui -createAdmin:"${USERNAME}" -password:"${PASSWORD}"
 
