@@ -9,7 +9,7 @@ export DOCKER_CLI_EXPERIMENTAL="enabled"
 docker buildx use homecluster
 
 # Build the image using buildx
-docker buildx build -t ${REPO}/${IMAGE}:latest --compress --push --platform "${PLATFORMS}" . || exit 1
+docker buildx build --no-cache -t ${REPO}/${IMAGE}:latest --compress --push --platform "${PLATFORMS}" . || exit 1
 docker pull ${REPO}/${IMAGE}:latest || exit 1
 
 # Starting container to pull version from container logs
