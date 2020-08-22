@@ -92,13 +92,13 @@ The docker run command initializes the newly created volume with any data that e
 
 If you want to map the container's `/config` to a specific path on your system, you can:
 
-1.  Use the `docker volume create` command with arguments, eg:
+1. Use the `docker volume create` command with arguments, eg:
 
 ```shell
 docker volume create vrsconfig --opt o="bind" --opt device="/path/to/vrs/config" --opt type="none"
 ```
 
-2.  If using `docker-compose`, use the following syntax in your `docker-compose.yml`, eg:
+2. If using `docker-compose`, use the following syntax in your `docker-compose.yml`, eg:
 
 ```yaml
 version: '2.0'
